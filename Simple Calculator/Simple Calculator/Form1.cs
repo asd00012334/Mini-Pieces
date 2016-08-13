@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace Simple_Calculator
 {
+    
     public partial class Form1 : Form
     {
         private String current;
@@ -44,22 +45,19 @@ namespace Simple_Calculator
             InitializeComponent();
             current = "0";
             result = 0;
-            operation = 0;
+            operation = '=';
             textBox1.Text = "";
-            operate = new OperType[5];
-            operate[0] = Assign;
-            operate[1] = Add;
-            operate[2] = Subtract;
-            operate[3] = Product;
-            operate[4] = Divide;
+            operate = new OperType[128];
+            operate['='] = Assign;
+            operate['+'] = Add;
+            operate['-'] = Subtract;
+            operate['*'] = Product;
+            operate['/'] = Divide;
             buttonDistribution = new ButtonDistribution[128];
             buttonDistribution['0'] = buttonDistribution['1'] = buttonDistribution['2'] = buttonDistribution['3'] =
             buttonDistribution['4'] = buttonDistribution['5'] = buttonDistribution['6'] = buttonDistribution['7'] =
             buttonDistribution['8'] = buttonDistribution['9'] = buttonDistribution['0'] = buttonDistribution['.'] = buttonNum_Click;
-            buttonDistribution['+'] = add_Click;
-            buttonDistribution['-'] = subtract_Click;
-            buttonDistribution['*'] = product_Click;
-            buttonDistribution['/'] = divide_Click;
+            buttonDistribution['+'] = buttonDistribution['-'] = buttonDistribution['*'] = buttonDistribution['/'] = operate_Click;
             buttonDistribution['='] = equal_Click;
             buttonDistribution['C'] = clear_Click;
         }
@@ -69,27 +67,26 @@ namespace Simple_Calculator
         }
         private void buttonDistribute(object sender, EventArgs e)
         {
-            // The only triggered function by click event.
+            // The only triggered function by click events.
             buttonDistribution[((Button)sender).Text[0]](sender, e);
         }
 
         private void equal_Click(object sender, EventArgs e)
         {
-            // Equal
             operate[operation](double.Parse(current));
             textBox1.Text = (result).ToString();
             textBox2.Text = "";
             result = 0;
             current = "0";
-            operation = 0;
+            operation = '=';
         }
 
-        private void add_Click(object sender, EventArgs e)
+        private void operate_Click(object sender, EventArgs e)
         {
-            // Add
-            textBox2.Text += "+";
+            
+            textBox2.Text += ((Button)sender).Text;
             operate[operation](double.Parse(current));
-            operation = 1;
+            operation = ((Button)sender).Text[0];
             current = "0";
             textBox1.Text = (result).ToString();
         }
@@ -101,47 +98,6 @@ namespace Simple_Calculator
             operation = 0;
             textBox2.Text = "";
             textBox1.Text = "";
-        }
-
-        private void subtract_Click(object sender, EventArgs e)
-        {
-            // Subtract
-            textBox2.Text += "-";
-            operate[operation](double.Parse(current));
-            operation = 2;
-            current = "0";
-            textBox1.Text = (result).ToString();
-        }
-
-        private void product_Click(object sender, EventArgs e)
-        {
-            // Product
-            textBox2.Text += "*";
-            operate[operation](double.Parse(current));
-            operation = 3;
-            current = "0";
-            textBox1.Text = (result).ToString();
-        }
-
-        private void divide_Click(object sender, EventArgs e)
-        {
-            // Divide
-            try
-            {
-                textBox2.Text += "/";
-                operate[operation](double.Parse(current));
-                operation = 4;
-                current = "0";
-                textBox1.Text = (result).ToString();
-            }
-            catch (System.DivideByZeroException)
-            {
-                operation = 0;
-                current = "0";
-                textBox1.Text = "Error";
-                textBox2.Text = "";
-            }
-            
         }
 
         private void buttonNum_Click(object sender, EventArgs e)
