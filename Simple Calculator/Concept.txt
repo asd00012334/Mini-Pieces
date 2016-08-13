@@ -1,0 +1,6 @@
+This is a Simple Calculator written in C#.
+With specification that no more than one function directly triggered by click events
+and also that no if-else & switch-case statement within,
+I came up with an idea to store all of the function in an array of delegation
+and access each delegation without any conditional statement.
+(essencially using more memory to achieve that)
