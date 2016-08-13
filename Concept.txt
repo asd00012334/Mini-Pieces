@@ -1,0 +1,2 @@
+This is a Macuree Effect written in C++ and Windows API.
+Ready to serve, all needed is compile and run.
