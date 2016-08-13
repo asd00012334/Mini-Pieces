@@ -1,0 +1,2 @@
+This is a program that help random seating.
+A friend of mine kind of need this so I wrote this.
