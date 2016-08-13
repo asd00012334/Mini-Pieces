@@ -1,0 +1,2 @@
+This is a Maze Puzzle game.
+Ready to serve, all needed is compile and run.
