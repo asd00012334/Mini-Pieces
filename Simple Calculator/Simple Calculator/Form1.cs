@@ -10,7 +10,6 @@ using System.Windows.Forms;
 
 namespace Simple_Calculator
 {
-    
     public partial class Form1 : Form
     {
         private String current;
@@ -61,7 +60,6 @@ namespace Simple_Calculator
             buttonDistribution['='] = equal_Click;
             buttonDistribution['C'] = clear_Click;
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
         }
@@ -83,7 +81,6 @@ namespace Simple_Calculator
 
         private void operate_Click(object sender, EventArgs e)
         {
-            
             textBox2.Text += ((Button)sender).Text;
             operate[operation](double.Parse(current));
             operation = ((Button)sender).Text[0];
@@ -99,7 +96,6 @@ namespace Simple_Calculator
             textBox2.Text = "";
             textBox1.Text = "";
         }
-
         private void buttonNum_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
