@@ -103,7 +103,7 @@ namespace Simple_Calculator
         {
             current = "0";
             result = 0;
-            operation = 0;
+            operation = '=';
             textBox2.Text = "";
             textBox1.Text = "";
         }
