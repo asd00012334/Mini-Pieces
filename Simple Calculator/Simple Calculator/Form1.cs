@@ -66,7 +66,18 @@ namespace Simple_Calculator
         private void buttonDistribute(object sender, EventArgs e)
         {
             // The only triggered function by click events.
-            buttonDistribution[((Button)sender).Text[0]](sender, e);
+            try
+            {
+                buttonDistribution[((Button)sender).Text[0]](sender, e);
+            }
+            catch (Exception)
+            {
+                current = "0";
+                result = 0;
+                operation = 0;
+                textBox2.Text = "";
+                textBox1.Text = "非數值";
+            }
         }
 
         private void equal_Click(object sender, EventArgs e)
