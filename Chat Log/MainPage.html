@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			#mainLog{
+				background-color: black;
+				color: lime;
+				font-size: 20px;
+				font: Microsoft JhengHei;
+				text-align: left;
+				margin: 0px;
+				width: 80%;
+				height: 500px;
+			}
+			#chatInput{
+				background-color: gray;
+				color: lime;
+				font-size: 15px;
+				font: Microsoft JhengHei;
+				text-align: left;
+				margin: 0px;
+				width: 74.7%;
+				height: 50%;
+				float: left;
+				align: bottom;
+				padding: 0px;
+			}
+			#sendButton{
+				margin: 0px;
+				width: 5%;
+				float: left;
+				padding: 0px;
+			}
+			
+		</style>
+		<script>
+			function getTime(){
+				var dateTime = new Date();
+				var output;
+				if(dateTime.getHours()<10) output = "0";
+				output += dateTime.getHours() + ":"
+				if(dateTime.getMinutes()<10) output+="0";
+				output += dateTime.getMinutes()+" ";
+				output += 
+				['Jan.','Feb.','Mar.',
+				 'Apr.','May.','Jun.',
+				 'Jul.','Aug.','Sep.',
+				 'Oct.','Nov.','Dec.'][dateTime.getMonth()];
+				output += dateTime.getDate();
+				output += "/"+dateTime.getFullYear();
+				return output;
+			}
+			
+			function getTimeHTML(){
+				var output;
+				output = "<nobr style = 'font-size: 12px; float: right'>";
+				output += getTime();
+				output += "</nobr>";
+				return output;
+			}
+			
+			function sendButtonClick(){
+				var mainLog = document.getElementById("mainLog");
+				var chatInput = document.getElementById("chatInput");
+				if(chatInput.value != ''){
+					mainLog.innerHTML += ('<br/>'+chatInput.value);
+					mainLog.innerHTML += getTimeHTML();
+					chatInput.value = '';
+				}
+			}
+			
+		</script>
+		
+	</head>
+	
+	<body>
+		<script>
+			
+			
+			
+		</script>
+		
+		<div>
+		
+		<div
+		type = "text"
+		id = "mainLog"
+		></div>
+		
+		<div>
+			<input
+			type = "text"
+			id = "chatInput"
+			onkeypress = "if(event.keyCode == 13) sendButtonClick();"
+			></input>
+			
+			<button
+			id = "sendButton"
+			onclick = "sendButtonClick();"
+			>Send</button>
+		</div>
+		
+		</div>
+		
+	</body>
+	
+</html>
