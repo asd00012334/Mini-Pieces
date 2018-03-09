@@ -1,0 +1,152 @@
+<html>
+<head>
+
+<script src='parallel.js'></script>
+
+</head>
+<body>
+	<canvas id='Taylor' style='border: 1px solid #000000;'></canvas>
+	<script>
+	function Pt(x,y){
+		this.x=x; this.y=y;
+	}
+	function Particle(pos,vel){
+		this.pos = pos;
+		this.vel = vel;
+	}
+	function circle(ctx,center,r, clr='red'){
+		ctx.beginPath();
+		ctx.arc(center.x,center.y, r,0,2*Math.PI);
+		ctx.fillStyle = clr;
+		ctx.fill();
+	}
+	function dist(ratio, window){
+		var diagonal = 0.0;
+		diagonal+=Math.pow(window.innerWidth,2);
+		diagonal+=Math.pow(window.innerHeight,2);
+		return ratio*Math.sqrt(diagonal);
+	}
+	function metric(l,r){
+		return Math.sqrt((l.x-r.x)**2+(l.y-r.y)**2);
+	}
+	function norm(v){
+		return Math.sqrt(v.x*v.x+v.y*v.y);
+	}
+
+	function render(){
+		var now = (new Date()).getMilliseconds();
+		var fps = 1000/(now - then);
+		var r = dist(0.001,window);
+		var eps = 1e-3;
+		then = now;
+		//console.log('fps:',fps);
+		setTimeout(render,1000/60);
+		//window.requestAnimationFrame(render);
+		
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth*0.975;
+		canvas.height = window.innerHeight*0.975;
+		ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+		var center = new Pt(canvas.width/2, canvas.height/2);
+		console.log(exist.length);
+		var elst = 0.8;
+		//var existP = new Parallel(exist);
+		exist.forEach(function(v){
+			//console.log('idx: ',idx,',', v.pos.x,',', v.pos.y);
+			var cur = v.pos;
+			var velocity = v.vel;
+			for(var i=0;i<exist.length;++i){
+				if(exist[i].pos===v.pos) continue;
+				var nxt = exist[i];
+				if(metric(cur,nxt.pos)>2*r) continue;
+				var off = new Pt(
+					nxt.pos.x-v.pos.x,
+					nxt.pos.y-v.pos.y
+				);
+				
+				var tmp = norm(off);
+				off.x/=tmp;
+				off.y/=tmp;
+				if(tmp<eps) continue;
+				//2r-tmp
+				nxt.pos.x+=off.x*(2*r-tmp);
+				nxt.pos.y+=off.y*(2*r-tmp);
+				if(
+					(off.x)*(nxt.vel.x-v.vel.x)+
+					(off.y)*(nxt.vel.y-v.vel.y)>=0
+				) continue;
+				var v1 = off.x*v.vel.x+off.y*v.vel.y;
+				var v2 = off.x*nxt.vel.x+off.y*nxt.vel.y;
+				tmp = (v2-v1)/2*elst;
+				v.vel.x += off.x*tmp;
+				v.vel.y += off.y*tmp;
+				tmp = (v1-v2)/2*elst;
+				nxt.vel.x += off.x*tmp;
+				nxt.vel.y += off.y*tmp;
+				
+			}
+			if(mouseHold){
+				v.vel = new Pt((mouse.x-cur.x)/10,(mouse.y-cur.y)/10);
+				cur.x += v.vel.x;
+				cur.y += v.vel.y;
+				
+			} else{
+				var g=80;
+				var velocity = v.vel;
+				if(cur.x+r>=canvas.width && velocity.x>0)
+					velocity.x*=-elst;
+				else if(cur.x-r<=0 && velocity.x<0)
+					velocity.x*=-elst;
+				if(cur.y+r>=canvas.height && velocity.y>0)
+					velocity.y*=-elst;
+				else if(cur.y-r<=0 && velocity.y<0)
+					velocity.y*=-elst;
+				if(cur.y>=canvas.height)
+					cur.y = canvas.height-r
+				else if(cur.x>=canvas.width)
+					cur.x = canvas.width-r;
+				else if(cur.x<=0)
+					cur.x = r;
+				cur.x+=velocity.x;
+				cur.y+=velocity.y;
+				velocity.y+=g/60;
+			}
+			
+			circle(ctx,cur,r);
+		});
+	};
+	var fps = 0;
+	var then = (new Date()).getMilliseconds();
+	var canvas = document.getElementById('Taylor');
+	var mouse = new Pt(0,0);
+	var mouseHold=false;
+	var velocity=new Pt(0.0,0.0);
+	var exist=[];
+	
+	window.onload=render;
+	function getMousePos(canvas, e){
+		var rect = canvas.getBoundingClientRect();
+		mouse.x = e.clientX-rect.left;
+		mouse.y = e.clientY-rect.top;
+	}
+	canvas.addEventListener('mousemove', function(e){
+		getMousePos(canvas,e);
+	},false);
+	canvas.addEventListener('mousedown',function(){	
+		mouseHold=true;
+	});
+	canvas.addEventListener('mouseup',function(){
+		mouseHold=false;
+	});
+	document.addEventListener('keydown',function(e){
+		var time = 100;
+		while(time--)
+			exist.push(new Particle(
+				new Pt(mouse.x,mouse.y), new Pt(0,0)
+			));
+	});
+	</script>
+
+</body>
+
+</html>

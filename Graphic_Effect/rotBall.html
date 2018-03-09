@@ -1,0 +1,55 @@
+<html>
+	<canvas id='Taylor' style='border: 1px solid #000000;'></canvas>
+	<script>
+	function Pt(x,y){
+		this.x=x; this.y=y;
+	}
+	function circle(ctx,center,r){
+		ctx.beginPath();
+		ctx.arc(cur.x,cur.y, r,0,2*Math.PI);
+		ctx.fillStyle = 'black';
+		ctx.fill();
+	}
+	function dist(ratio, window){
+		var diagonal = 0.0;
+		diagonal+=Math.pow(window.innerWidth,2);
+		diagonal+=Math.pow(window.innerHeight,2);
+		return ratio*Math.sqrt(diagonal);
+	}
+
+	function render(){
+		var now = (new Date()).getMilliseconds();
+		var fps = 1000/(now - then);
+		then = now;
+		console.log('fps:',fps);
+		setTimeout(render,1000/60);
+		//window.requestAnimationFrame(render);
+		
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth*0.975;
+		canvas.height = window.innerHeight*0.975;
+		ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+		
+		var center = new Pt(canvas.width/2, canvas.height/2);
+		r = dist(0.01,window);
+		var rotCenter = new Pt(canvas.height/4, canvas.width/4);
+		var d = Math.sqrt(canvas.height**2+canvas.width**2);
+		for(var i=-d;i<1.5*d;i+=5*r)
+		for(var j=-d;j<1.5*d;j+=5*r){
+			var dx = j-rotCenter.x;
+			var dy = i-rotCenter.y;
+			cur = new Pt(0,0);
+			cur.x = rotCenter.x+dx*Math.cos(degree)-dy*Math.sin(degree);
+			cur.y = rotCenter.y+dx*Math.sin(degree)+dy*Math.cos(degree);
+			circle(ctx,cur,r);
+		}
+		degree = degree + Math.PI*2/60/10;
+		if(degree>2*Math.PI) degree = 0;
+	};
+	var fps = 0;
+	var then = (new Date()).getMilliseconds();
+	var canvas = document.getElementById('Taylor');
+	var degree = 0.0;
+	window.onload=render;
+	</script>
+</html>

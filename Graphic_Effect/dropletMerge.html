@@ -1,0 +1,85 @@
+<html>
+<head></head>
+<body>
+	<canvas id='Taylor' style='border: 1px solid #000000;'></canvas>
+	<script>
+	var exist = [];
+
+	function Pt(x,y){
+		this.x=x; this.y=y;
+	}	
+	function dist(ratio, window){
+		var diagonal = 0.0;
+		diagonal+=Math.pow(window.innerWidth,2);
+		diagonal+=Math.pow(window.innerHeight,2);
+		return ratio*Math.sqrt(diagonal);
+	}
+
+	function render(){
+		var now = (new Date()).getMilliseconds();
+		var fps = 1000/(now - then);
+		then = now;
+		console.log('fps:',fps);
+		setTimeout(render,1000/60);
+		//window.requestAnimationFrame(render);
+		var r = dist(0.03,window);
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth*0.975;
+		canvas.height = window.innerHeight*0.975;
+		ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+		var center = new Pt(canvas.width/2, canvas.height/2);
+		cur.x += (mouse.x-cur.x)/10;
+		cur.y += (mouse.y-cur.y)/10;
+		var eps = 1e-5;	
+		var step = 2;
+		var bound = 0.5/(r**2);
+		for(var i=0;i<canvas.height;i+=step)
+		for(var j=0;j<canvas.width;j+=step){
+			var accum = 0.0;
+			exist.forEach(function(v){
+				accum+=1/((v.x-j)**2+(v.y-i)**2);
+			});
+			accum+=1/((cur.x-j)**2+(cur.y-i)**2);
+			if(bound-eps<accum && accum<bound+eps)
+				ctx.fillRect(j,i,step,step);
+		}
+	};
+	var fps = 0;
+	var then = (new Date()).getMilliseconds();
+	var canvas = document.getElementById('Taylor');
+	var cur = new Pt(0,0);
+	var mouse = new Pt(0,0);
+	
+	function getMousePos(canvas, e){
+		var rect = canvas.getBoundingClientRect();
+		mouse.x = e.clientX-rect.left;
+		mouse.y = e.clientY-rect.top;
+	}
+	canvas.addEventListener('mousemove', function(e){
+		getMousePos(canvas,e);
+	},false);
+	var fps = 0;
+	var then = (new Date()).getMilliseconds();
+	var canvas = document.getElementById('Taylor');
+	var cur = new Pt(0,0);
+	var mouse = new Pt(0,0);	
+	function getMousePos(canvas, e){
+		var rect = canvas.getBoundingClientRect();
+		mouse.x = e.clientX-rect.left;
+		mouse.y = e.clientY-rect.top;
+	}
+	canvas.addEventListener('mousemove', function(e){
+		getMousePos(canvas,e);
+	},false);
+	canvas.addEventListener('mousedown',function(){
+		mouseHold=true;
+		exist.push(new Pt(mouse.x,mouse.y));
+	});
+	canvas.addEventListener('mouseup',function(){
+		mouseHold=false;
+	});
+	window.onload=render;
+	</script>
+</body>
+
+</html>
